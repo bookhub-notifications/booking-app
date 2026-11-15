@@ -158,7 +158,13 @@ return (
         <p className="text-gray-600 mt-2">
           {s.description}
         </p>
+<h3 className="text-xl font-bold">
+  {s.title}
+</h3>
 
+<p className="text-gray-600 mt-2">
+  {s.description}
+</p>
         <p className="text-yellow-600 font-semibold mt-3">
           ⭐ {s.average_rating} ({s.total_reviews} recensioni)
         </p>
