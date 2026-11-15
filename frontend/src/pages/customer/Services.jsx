@@ -8,7 +8,7 @@ import {
   createOrder,
 } from "../../api/payments";
 import Layout from "../../components/Layout";
-
+import { Link } from "react-router-dom";
 export default function Services() {
   const [services, setServices] = useState([]);
   const [slots, setSlots] = useState({});
@@ -158,10 +158,12 @@ return (
 <p className="text-gray-600 mt-2">
   {s.description}
 </p>
-
-<p className="text-sm text-gray-500 mt-2">
+<Link
+  to={`/provider/${s.provider_id}`}
+  className="text-sm text-blue-600 hover:underline mt-2 block"
+>
   👤 {s.provider_name}
-</p>
+</Link>
 
 <p className="text-sm text-gray-500">
   📍 {s.city}
