@@ -36,6 +36,7 @@ export function createListing(
   title,
   description,
   price,
+  category,
   image
 ) {
   const formData = new FormData();
@@ -43,6 +44,7 @@ export function createListing(
   formData.append("title", title);
   formData.append("description", description);
   formData.append("price", price);
+  formData.append("category", category);
 
   if (image) {
     formData.append("image", image);
@@ -127,10 +129,12 @@ PROVIDER PROFILE
 
 export function createProviderProfile(
   name,
-  phone
+  phone,
+  city
 ) {
   return API.post("/create", {
     name,
     phone,
+    city,
   });
 }

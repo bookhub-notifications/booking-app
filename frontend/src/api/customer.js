@@ -5,9 +5,27 @@ const API = axios.create({
   baseURL: `${API_BASE_URL}/customers`,
 });
 
+/*
+=====================================
+PUBLIC SERVICES
+=====================================
+*/
+
 export function getAllServices() {
   return API.get("/services");
 }
+
+export function getServiceById(id) {
+  return API.get(
+    `/service/${id}`
+  );
+}
+
+/*
+=====================================
+BOOKINGS
+=====================================
+*/
 
 export function getMyBookings() {
   const token =
@@ -23,7 +41,9 @@ export function getMyBookings() {
   );
 }
 
-export function getServiceSlots(serviceId) {
+export function getServiceSlots(
+  serviceId
+) {
   return axios.get(
     `${API_BASE_URL}/slots/service/${serviceId}`
   );

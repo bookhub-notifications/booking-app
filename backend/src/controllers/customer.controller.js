@@ -1,6 +1,7 @@
 import { pool } from "../config/db.js";
 import { getCustomerReservationsService } from "../services/customer.service.js";
 import { getCustomerAnalyticsService } from "../services/customer.analytics.service.js";
+
 export const getCustomerReservations = async (
   req,
   res
@@ -11,6 +12,7 @@ export const getCustomerReservations = async (
     )
   );
 };
+
 export const getCustomerAnalytics = async (
   req,
   res
@@ -30,6 +32,7 @@ export const getCustomerAnalytics = async (
     });
   }
 };
+
 export const getApprovedServices = async (
   req,
   res
@@ -41,16 +44,29 @@ export const getApprovedServices = async (
         s.title,
         s.description,
         s.price,
+        s.category,
         s.image_url,
 
+        p.id AS provider_id,
+        p.name AS provider_name,
+        p.city,
+        p.status AS provider_status,
+
         COALESCE(
-          ROUND(AVG(r.rating)::numeric, 1),
+          ROUND(
+            AVG(r.rating)::numeric,
+            1
+          ),
           0
         ) AS average_rating,
 
-        COUNT(r.id)::integer AS total_reviews
+        COUNT(r.id)::integer
+          AS total_reviews
 
       FROM services s
+
+      LEFT JOIN providers p
+        ON p.id = s.provider_id
 
       LEFT JOIN reviews r
         ON r.provider_id = s.provider_id
@@ -62,7 +78,12 @@ export const getApprovedServices = async (
         s.title,
         s.description,
         s.price,
-        s.image_url
+        s.category,
+        s.image_url,
+        p.id,
+        p.name,
+        p.city,
+        p.status
 
       ORDER BY
         average_rating DESC,
@@ -71,6 +92,72 @@ export const getApprovedServices = async (
     `);
 
     res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};
+
+export const getServiceById = async (
+  req,
+  res
+) => {
+  try {
+    const result = await pool.query(
+      `
+      SELECT
+        s.*,
+
+        p.id AS provider_id,
+        p.name AS provider_name,
+        p.email AS provider_email,
+        p.phone AS provider_phone,
+        p.city AS provider_city,
+        p.status AS provider_status,
+
+        COALESCE(
+          ROUND(
+            AVG(r.rating)::numeric,
+            1
+          ),
+          0
+        ) AS average_rating,
+
+        COUNT(r.id)::integer
+          AS total_reviews
+
+      FROM services s
+
+      LEFT JOIN providers p
+        ON p.id = s.provider_id
+
+      LEFT JOIN reviews r
+        ON r.provider_id = s.provider_id
+
+      WHERE s.id = $1
+
+      GROUP BY
+        s.id,
+        p.id,
+        p.name,
+        p.email,
+        p.phone,
+        p.city,
+        p.status
+      `,
+      [req.params.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        error: "Service not found",
+      });
+    }
+
+    res.json(result.rows[0]);
   } catch (error) {
     console.error(error);
 

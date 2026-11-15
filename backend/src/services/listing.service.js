@@ -5,6 +5,7 @@ export const createListingService = async ({
   title,
   description,
   price,
+  category,
   image_url,
 }) => {
   const result = await pool.query(
@@ -14,10 +15,19 @@ export const createListingService = async ({
       title,
       description,
       price,
+      category,
       approved,
       image_url
     )
-    VALUES ($1, $2, $3, $4, false, $5)
+    VALUES (
+      $1,
+      $2,
+      $3,
+      $4,
+      $5,
+      false,
+      $6
+    )
     RETURNING *
     `,
     [
@@ -25,6 +35,7 @@ export const createListingService = async ({
       title,
       description,
       price,
+      category,
       image_url,
     ]
   );
@@ -40,6 +51,7 @@ export const getProviderServicesService = async (
     SELECT
       id,
       title,
+      category,
       price,
       description,
       image_url,
@@ -76,7 +88,8 @@ export const updateServiceService = async (
   providerId,
   title,
   description,
-  price
+  price,
+  category
 ) => {
   const result = await pool.query(
     `
@@ -84,15 +97,17 @@ export const updateServiceService = async (
     SET
       title = $1,
       description = $2,
-      price = $3
-    WHERE id = $4
-    AND provider_id = $5
+      price = $3,
+      category = $4
+    WHERE id = $5
+    AND provider_id = $6
     RETURNING *
     `,
     [
       title,
       description,
       price,
+      category,
       serviceId,
       providerId,
     ]

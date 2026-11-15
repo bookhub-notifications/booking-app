@@ -3,10 +3,61 @@ import { createListing } from "../../api/provider";
 import Layout from "../../components/Layout";
 
 export default function CreateListing() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState(null);
+  const [title, setTitle] =
+    useState("");
+
+  const [description, setDescription] =
+    useState("");
+
+  const [price, setPrice] =
+    useState("");
+
+  const [category, setCategory] =
+    useState("");
+
+  const [image, setImage] =
+    useState(null);
+
+  const categories = [
+    "Babysitter",
+    "Dog Sitting",
+    "Pet Care",
+    "Pet Walking",
+    "Pet Taxi",
+    "Pulizie",
+    "Colf",
+    "Giardinaggio",
+    "Personal Trainer",
+    "Yoga",
+    "Fitness",
+    "Lezioni Private",
+    "Ripetizioni",
+    "Lingue",
+    "Musica",
+    "Web Design",
+    "Sviluppo Software",
+    "Graphic Design",
+    "Digital Marketing",
+    "Fotografia",
+    "Videomaking",
+    "Consulenza",
+    "Business",
+    "Commercialista",
+    "Traslochi",
+    "Trasporti",
+    "Massaggi",
+    "Benessere",
+    "Beauty",
+    "Eventi",
+    "Wedding Planner",
+    "Assistenza Anziani",
+    "Badante",
+    "Falegname",
+    "Idraulico",
+    "Elettricista",
+    "Imbianchino",
+    "Altro",
+  ];
 
   async function handleCreate() {
     try {
@@ -14,6 +65,7 @@ export default function CreateListing() {
         title,
         description,
         price,
+        category,
         image
       );
 
@@ -22,10 +74,13 @@ export default function CreateListing() {
       setTitle("");
       setDescription("");
       setPrice("");
+      setCategory("");
       setImage(null);
     } catch (err) {
       console.error(err);
-      alert("Errore nella creazione del servizio");
+      alert(
+        "Errore nella creazione del servizio"
+      );
     }
   }
 
@@ -62,6 +117,27 @@ export default function CreateListing() {
           setPrice(e.target.value)
         }
       />
+
+      <select
+        className="border p-2 w-full mb-3"
+        value={category}
+        onChange={(e) =>
+          setCategory(e.target.value)
+        }
+      >
+        <option value="">
+          Seleziona una categoria
+        </option>
+
+        {categories.map((cat) => (
+          <option
+            key={cat}
+            value={cat}
+          >
+            {cat}
+          </option>
+        ))}
+      </select>
 
       <input
         type="file"

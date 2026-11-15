@@ -18,17 +18,19 @@ export const createProvider = async (
 ) => {
   try {
     const {
-      name,
-      phone,
-    } = req.body;
+  name,
+  phone,
+  city,
+} = req.body;
 
     const result =
-      await createProviderService({
-        name,
-        email: req.user.email,
-        phone,
-        user_id: req.user.id,
-      });
+  await createProviderService({
+    name,
+    email: req.user.email,
+    phone,
+    city,
+    user_id: req.user.id,
+  });
 
     res.json(result);
   } catch (error) {
@@ -158,6 +160,7 @@ export const getProviderReservations =
       });
     }
   };
+
 export const getProviderAnalytics =
   async (req, res) => {
     try {
@@ -172,6 +175,101 @@ export const getProviderAnalytics =
 
       res.status(500).json({
         error: "Internal server error",
+      });
+    }
+  };
+
+export const getPublicProvider =
+  async (req, res) => {
+    try {
+      const providerResult =
+        await pool.query(
+          `
+          SELECT
+  p.id,
+  p.user_id,
+  p.name,
+  p.email,
+  p.phone,
+  p.city,
+  p.status,
+  u.last_seen,
+
+  COALESCE(
+    ROUND(
+      AVG(r.rating)::numeric,
+      1
+    ),
+    0
+  ) AS average_rating,
+
+  COUNT(r.id)::integer
+    AS total_reviews
+
+FROM providers p
+
+LEFT JOIN users u
+  ON u.id = p.user_id
+
+LEFT JOIN reviews r
+  ON r.provider_id = p.id
+
+WHERE p.id = $1
+
+GROUP BY
+  p.id,
+  p.user_id,
+  p.name,
+  p.email,
+  p.phone,
+  p.city,
+  p.status,
+  u.last_seen
+          `,
+          [req.params.id]
+        );
+
+      if (
+        providerResult.rows.length === 0
+      ) {
+        return res.status(404).json({
+          error:
+            "Provider not found",
+        });
+      }
+
+      const services =
+        await pool.query(
+          `
+          SELECT
+            id,
+            title,
+            description,
+            price,
+            image_url
+
+          FROM services
+
+          WHERE provider_id = $1
+          AND approved = true
+
+          ORDER BY id DESC
+          `,
+          [req.params.id]
+        );
+
+      res.json({
+        provider:
+          providerResult.rows[0],
+        services:
+          services.rows,
+      });
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).json({
+        error:
+          "Internal server error",
       });
     }
   };

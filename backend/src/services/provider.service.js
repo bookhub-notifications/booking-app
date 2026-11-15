@@ -4,6 +4,7 @@ export const createProviderService = async ({
   name,
   email,
   phone,
+  city,
   user_id,
 }) => {
   const result = await pool.query(
@@ -12,6 +13,7 @@ export const createProviderService = async ({
       name,
       email,
       phone,
+      city,
       user_id,
       status,
       approved,
@@ -22,6 +24,7 @@ export const createProviderService = async ({
       $2,
       $3,
       $4,
+      $5,
       'pending',
       false,
       false
@@ -32,13 +35,13 @@ export const createProviderService = async ({
       name,
       email,
       phone,
+      city,
       user_id,
     ]
   );
 
   return result.rows[0];
 };
-
 export const uploadDocumentService = async ({
   provider_id,
   document_path,

@@ -4,9 +4,16 @@ import {
   getCustomerReservations,
   getApprovedServices,
   getCustomerAnalytics,
+  getServiceById,
 } from "../controllers/customer.controller.js";
 
 const router = express.Router();
+
+/*
+=====================================
+PUBLIC SERVICES
+=====================================
+*/
 
 router.get(
   "/services",
@@ -14,9 +21,26 @@ router.get(
 );
 
 router.get(
+  "/service/:id",
+  getServiceById
+);
+
+/*
+=====================================
+CUSTOMER ANALYTICS
+=====================================
+*/
+
+router.get(
   "/:id/analytics",
   getCustomerAnalytics
 );
+
+/*
+=====================================
+CUSTOMER RESERVATIONS
+=====================================
+*/
 
 router.get(
   "/:id/reservations",

@@ -3,9 +3,17 @@ import Layout from "../../components/Layout";
 import { createProviderProfile } from "../../api/provider";
 
 export default function ProviderSetup() {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [name, setName] =
+    useState("");
+
+  const [phone, setPhone] =
+    useState("");
+
+  const [city, setCity] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -15,7 +23,8 @@ export default function ProviderSetup() {
 
       await createProviderProfile(
         name,
-        phone
+        phone,
+        city
       );
 
       alert(
@@ -24,6 +33,7 @@ export default function ProviderSetup() {
 
       setName("");
       setPhone("");
+      setCity("");
     } catch (error) {
       console.error(error);
 
@@ -43,12 +53,25 @@ export default function ProviderSetup() {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow max-w-lg"
+        className="
+          bg-white
+          p-6
+          rounded
+          shadow
+          max-w-lg
+        "
       >
+
         <input
           type="text"
           placeholder="Nome completo"
-          className="w-full border p-3 mb-4 rounded"
+          className="
+            w-full
+            border
+            p-3
+            mb-4
+            rounded
+          "
           value={name}
           onChange={(e) =>
             setName(e.target.value)
@@ -59,22 +82,51 @@ export default function ProviderSetup() {
         <input
           type="text"
           placeholder="Telefono"
-          className="w-full border p-3 mb-4 rounded"
+          className="
+            w-full
+            border
+            p-3
+            mb-4
+            rounded
+          "
           value={phone}
           onChange={(e) =>
             setPhone(e.target.value)
           }
         />
 
+        <input
+          type="text"
+          placeholder="Città"
+          className="
+            w-full
+            border
+            p-3
+            mb-4
+            rounded
+          "
+          value={city}
+          onChange={(e) =>
+            setCity(e.target.value)
+          }
+        />
+
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="
+            bg-blue-600
+            text-white
+            px-4
+            py-2
+            rounded
+          "
         >
           {loading
             ? "Salvataggio..."
             : "Salva Profilo"}
         </button>
+
       </form>
     </Layout>
   );

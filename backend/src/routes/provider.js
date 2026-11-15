@@ -9,6 +9,7 @@ import {
   approveProvider,
   getProviderReservations,
   getProviderAnalytics,
+  getPublicProvider,
 } from "../controllers/provider.controller.js";
 
 import {
@@ -47,6 +48,17 @@ router.post(
   "/approve/:id",
   auth,
   approveProvider
+);
+
+/*
+=====================================
+PUBLIC PROVIDER
+=====================================
+*/
+
+router.get(
+  "/public/:id",
+  getPublicProvider
 );
 
 /*
@@ -141,6 +153,7 @@ router.get(
     }
   }
 );
+
 router.patch(
   "/notifications/:id/read",
   auth,
@@ -170,4 +183,5 @@ router.patch(
     }
   }
 );
+
 export default router;

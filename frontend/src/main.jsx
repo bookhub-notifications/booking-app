@@ -8,12 +8,20 @@ import {
   ThemeProvider,
 } from "./context/ThemeContext";
 
+import { Toaster } from "react-hot-toast";
+
 ReactDOM.createRoot(
   document.getElementById("app")
 ).render(
   <React.StrictMode>
     <ThemeProvider>
       <App />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+        }}
+      />
     </ThemeProvider>
   </React.StrictMode>
 );

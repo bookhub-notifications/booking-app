@@ -31,6 +31,13 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ResetPassword from "./pages/auth/ResetPassword";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import LandingPage from "./pages/LandingPage";
+import PublicServices from "./pages/PublicServices";
+import ServiceDetails from "./pages/ServiceDetails";
+import ProviderProfile from "./pages/ProviderProfile";
+import Favorites from "./pages/Favorites";
+import Messages from "./pages/Messages";
+import Inbox from "./pages/Inbox";
 function ProtectedRoute({
   children,
   role,
@@ -56,7 +63,46 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-
+<Route
+  path="/"
+  element={<LandingPage />}
+/>
+      <Route
+  path="/services"
+  element={<PublicServices />}
+/> 
+        <Route
+    path="/service/:id"
+    element={<ServiceDetails />}
+  />
+        <Route
+  path="/provider/:id"
+  element={<ProviderProfile />}
+/>
+        <Route
+  path="/favorites"
+  element={
+    <ProtectedRoute role="customer">
+      <Favorites />
+    </ProtectedRoute>
+  }
+/>
+    <Route
+  path="/messages"
+  element={
+    <ProtectedRoute>
+      <Inbox />
+    </ProtectedRoute>
+  }
+/>  
+      <Route
+  path="/messages/:userId"
+  element={
+    <ProtectedRoute>
+      <Messages />
+    </ProtectedRoute>
+  }
+/>
         {/* AUTH */}
         <Route
           path="/login"
@@ -231,7 +277,7 @@ export default function App() {
 <Route
   path="*"
   element={
-    <Navigate to="/login" />
+    <Navigate to="/" />
   }
 />
 

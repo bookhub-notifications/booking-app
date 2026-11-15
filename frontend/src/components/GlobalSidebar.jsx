@@ -1,6 +1,76 @@
+import {
+  useEffect,
+  useState,
+  useRef,
+} from "react";
+
+import { io } from "socket.io-client";
+
+import {
+  getUnreadMessagesCount,
+} from "../api/messages";
+
 export default function GlobalSidebar() {
   const role =
     localStorage.getItem("role") || "admin";
+
+  const favoriteCount = Number(
+    localStorage.getItem(
+      "favoriteCount"
+    ) || 0
+  );
+
+  const [unreadCount, setUnreadCount] =
+    useState(0);
+
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    loadUnreadCount();
+
+    const userId =
+      localStorage.getItem("userId");
+
+    if (!userId) return;
+
+    socketRef.current = io(
+      "http://localhost:5000"
+    );
+
+    socketRef.current.emit(
+      "join",
+      Number(userId)
+    );
+
+    socketRef.current.on(
+      "new-message",
+      () => {
+        loadUnreadCount();
+      }
+    );
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, []);
+
+  async function loadUnreadCount() {
+    try {
+      const res =
+        await getUnreadMessagesCount();
+
+      setUnreadCount(
+        res.data.unreadCount || 0
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const messageLabel =
+    unreadCount > 0
+      ? `💬 Messaggi (${unreadCount})`
+      : "💬 Messaggi";
 
   const links = {
     admin: [
@@ -59,6 +129,10 @@ export default function GlobalSidebar() {
         label: "🛠 I Miei Servizi",
         url: "/provider/services",
       },
+      {
+        label: messageLabel,
+        url: "/messages",
+      },
     ],
 
     customer: [
@@ -74,6 +148,14 @@ export default function GlobalSidebar() {
         label: "My Bookings",
         url: "/customer/bookings",
       },
+      {
+        label: `❤️ My Favorites (${favoriteCount})`,
+        url: "/favorites",
+      },
+      {
+        label: messageLabel,
+        url: "/messages",
+      },
     ],
   };
 
@@ -87,9 +169,13 @@ export default function GlobalSidebar() {
 
   return (
     <div
-      className={`w-64 ${
-        color[role] || "bg-gray-900"
-      } text-white h-screen p-4`}
+      className={`
+        w-64
+        ${color[role] || "bg-gray-900"}
+        text-white
+        h-screen
+        p-4
+      `}
     >
       <h2 className="text-xl font-bold mb-6 capitalize">
         {role} Panel
@@ -100,7 +186,10 @@ export default function GlobalSidebar() {
           <a
             key={item.url}
             href={item.url}
-            className="hover:text-gray-300 transition"
+            className="
+              hover:text-gray-300
+              transition
+            "
           >
             {item.label}
           </a>

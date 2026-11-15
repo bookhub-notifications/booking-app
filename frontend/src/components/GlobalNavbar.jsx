@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   getNotifications,
   markNotificationAsRead,
 } from "../api/provider";
 import { useTheme } from "../context/ThemeContext";
-
+import { io } from "socket.io-client";
+import toast from "react-hot-toast";
 export default function GlobalNavbar() {
   const role = localStorage.getItem("role");
 
@@ -16,13 +17,40 @@ export default function GlobalNavbar() {
 
   const [showNotifications, setShowNotifications] =
     useState(false);
-
+const socketRef = useRef(null);
   useEffect(() => {
     if (role !== "provider") return;
 
     loadNotifications();
   }, []);
+useEffect(() => {
+  const userId =
+    localStorage.getItem("userId");
 
+  if (!userId) return;
+  socketRef.current = io(
+    "http://localhost:5000"
+  );
+
+  socketRef.current.emit(
+    "join",
+    Number(userId)
+  );
+
+ socketRef.current.on(
+  "new-message",
+  (message) => {
+    toast.success(
+      `💬 ${message.message}`
+    );
+  }
+);
+
+
+  return () => {
+    socketRef.current?.disconnect();
+  };
+}, []);
   const loadNotifications = async () => {
     try {
       const res =
