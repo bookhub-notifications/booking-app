@@ -487,25 +487,20 @@ const filteredServices = services
         📍 {service.city}
       </p>
     )}
-   <div className="flex items-center gap-2">
+  <div className="flex items-center gap-2 mt-1">
   {service.profile_image && (
     <img
       src={service.profile_image}
       alt={service.provider_name}
-      className="w-8 h-8 rounded-full object-cover"
+      className="w-8 h-8 rounded-full object-cover border border-gray-200"
     />
   )}
 
   <Link
     to={`/provider/${service.provider_id}`}
-    className="
-      text-sm
-      text-blue-600
-      hover:underline
-      inline-block
-    "
+    className="text-sm text-blue-600 hover:underline"
   >
-    👤 {service.provider_name}
+    {service.provider_name}
   </Link>
 </div>
 
