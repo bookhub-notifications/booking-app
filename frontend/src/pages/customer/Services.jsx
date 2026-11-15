@@ -152,22 +152,24 @@ return (
       <div className="p-5 flex flex-col h-full justify-between">
 
         <h3 className="text-xl font-bold">
-          {s.title}
-        </h3>
-
-        <p className="text-gray-600 mt-2">
-          {s.description}
-        </p>
-<h3 className="text-xl font-bold">
   {s.title}
 </h3>
 
 <p className="text-gray-600 mt-2">
   {s.description}
 </p>
-        <p className="text-yellow-600 font-semibold mt-3">
-          ⭐ {s.average_rating} ({s.total_reviews} recensioni)
-        </p>
+
+<p className="text-sm text-gray-500 mt-2">
+  👤 {s.provider_name}
+</p>
+
+<p className="text-sm text-gray-500">
+  📍 {s.city}
+</p>
+
+<p className="text-yellow-600 font-semibold mt-3">
+  ⭐ {s.average_rating} ({s.total_reviews} recensioni)
+</p>
 
         <p className="text-2xl font-bold text-green-600 mt-2">
           €{s.price}

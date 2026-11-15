@@ -487,7 +487,7 @@ const filteredServices = services
         📍 {service.city}
       </p>
     )}
-
+console.log(service);
     {service.provider_name && (
       <Link
         to={`/provider/${service.provider_id}`}

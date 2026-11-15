@@ -26,7 +26,7 @@ export default function ServiceDetails() {
         await getServiceById(id);
 
       setService(res.data);
-
+console.log(res.data);
       const reviewsRes =
         await getProviderReviews(
           res.data.provider_id
