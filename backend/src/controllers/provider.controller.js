@@ -187,13 +187,14 @@ export const getPublicProvider =
           `
           SELECT
   p.id,
-  p.user_id,
-  p.name,
-  p.email,
-  p.phone,
-  p.city,
-  p.status,
-  u.last_seen,
+p.user_id,
+p.name,
+p.email,
+p.phone,
+p.profile_image,
+p.city,
+p.status,
+u.last_seen,
 
   COALESCE(
     ROUND(
@@ -222,6 +223,7 @@ GROUP BY
   p.name,
   p.email,
   p.phone,
+  p.profile_image,
   p.city,
   p.status,
   u.last_seen
