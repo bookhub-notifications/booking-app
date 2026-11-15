@@ -2,10 +2,7 @@ import { pool } from "../config/db.js";
 import { getCustomerReservationsService } from "../services/customer.service.js";
 import { getCustomerAnalyticsService } from "../services/customer.analytics.service.js";
 
-export const getCustomerReservations = async (
-  req,
-  res
-) => {
+export const getCustomerReservations = async (req, res) => {
   res.json(
     await getCustomerReservationsService(
       req.params.id
@@ -49,6 +46,7 @@ export const getApprovedServices = async (
 
         p.id AS provider_id,
         p.name AS provider_name,
+        p.profile_image,
         p.city,
         p.status AS provider_status,
 
@@ -82,6 +80,7 @@ export const getApprovedServices = async (
         s.image_url,
         p.id,
         p.name,
+        p.profile_image,
         p.city,
         p.status
 
@@ -116,6 +115,7 @@ export const getServiceById = async (
         p.email AS provider_email,
         p.phone AS provider_phone,
         p.city AS provider_city,
+        p.profile_image,
         p.status AS provider_status,
 
         COALESCE(
@@ -146,6 +146,7 @@ export const getServiceById = async (
         p.email,
         p.phone,
         p.city,
+        p.profile_image,
         p.status
       `,
       [req.params.id]
