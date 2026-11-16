@@ -6,6 +6,7 @@ import upload from "../middleware/upload.js";
 import {
   createProvider,
   uploadDocument,
+  uploadProfileImage,
   approveProvider,
   getProviderReservations,
   getProviderAnalytics,
@@ -42,6 +43,12 @@ router.post(
   auth,
   upload.single("document"),
   uploadDocument
+);
+router.post(
+  "/profile-image",
+  auth,
+  upload.single("image"),
+  uploadProfileImage
 );
 
 router.post(

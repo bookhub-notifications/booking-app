@@ -6,6 +6,7 @@ import {
 import {
   getProviderAnalytics,
   getProviderBookings,
+  uploadProfileImage,
 } from "../../api/provider";
 import Layout from "../../components/Layout";
 import {
@@ -27,6 +28,8 @@ export default function ProviderDashboard() {
   });
 const [bookings, setBookings] =
   useState([]);
+  const [profileFile, setProfileFile] =
+  useState(null);
   const [analytics, setAnalytics] =
   useState({
     totalBookings: 0,
@@ -86,11 +89,78 @@ const chartData = [
     valore: analytics.cancelledBookings,
   },
 ];
-  return (
+async function handleProfileUpload() {
+  if (!profileFile) {
+    alert("Seleziona un'immagine");
+    return;
+  }
+
+  try {
+    await uploadProfileImage(profileFile);
+
+    alert("Foto profilo aggiornata!");
+
+    window.location.reload();
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "Errore durante il caricamento"
+    );
+  }
+}  
+return (
     <Layout>
       <h2 className="text-xl font-bold mb-4">
         Benvenuto Provider
       </h2>
+<div className="bg-white p-6 rounded shadow mb-6">
+  <h3 className="text-lg font-bold mb-3">
+    👤 Foto Profilo
+  </h3>
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) =>
+      setProfileFile(
+        e.target.files[0]
+      )
+    }
+    className="mb-3"
+  />
+
+  <button
+    onClick={handleProfileUpload}
+    className="
+      bg-blue-600
+      text-white
+      px-4
+      py-2
+      rounded
+      hover:bg-blue-700
+    "
+  >
+    Carica Foto
+  </button>
+</div>
+<div className="bg-white p-6 rounded shadow mb-6">
+  <h3 className="text-lg font-bold mb-3">
+    👤 Foto Profilo
+  </h3>
+
+  <input
+    type="file"
+    accept="image/*"
+    className="border p-2 rounded w-full"
+  />
+
+  <button
+    className="mt-3 bg-blue-600 text-white px-4 py-2 rounded"
+  >
+    Carica Foto
+  </button>
+</div>
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
 
   <div className="bg-white p-4 rounded shadow">

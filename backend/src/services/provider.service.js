@@ -64,7 +64,26 @@ export const uploadDocumentService = async ({
     success: true,
   };
 };
+export const uploadProfileImageService = async ({
+  provider_id,
+  profile_image,
+}) => {
+  await pool.query(
+    `
+    UPDATE providers
+    SET profile_image = $1
+    WHERE id = $2
+    `,
+    [
+      profile_image,
+      provider_id,
+    ]
+  );
 
+  return {
+    success: true,
+  };
+};
 export const approveProviderService = async (
   provider_id
 ) => {

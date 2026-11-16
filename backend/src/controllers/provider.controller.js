@@ -5,6 +5,7 @@ import cloudinary from "../config/cloudinary.js";
 import {
   createProviderService,
   uploadDocumentService,
+  uploadProfileImageService,
   approveProviderService,
   getProviderReservationsService,
   getProviderAnalyticsService,
@@ -122,7 +123,86 @@ export const uploadDocument = async (
     });
   }
 };
+export const uploadProfileImage = async (
+  req,
+  res
+) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        error: "File mancante",
+      });
+    }
 
+    const uploadResult =
+      await new Promise(
+        (resolve, reject) => {
+          const uploadStream =
+            cloudinary.uploader.upload_stream(
+              {
+                folder:
+                  "booking-app/profile-images",
+                resource_type: "image",
+              },
+              (error, result) => {
+                if (error) {
+                  reject(error);
+                  return;
+                }
+
+                resolve(result);
+              }
+            );
+
+          streamifier
+            .createReadStream(
+              req.file.buffer
+            )
+            .pipe(uploadStream);
+        }
+      );
+
+    const providerQuery =
+      await pool.query(
+        `
+        SELECT id
+        FROM providers
+        WHERE user_id = $1
+        LIMIT 1
+        `,
+        [req.user.id]
+      );
+
+    if (
+      providerQuery.rows.length === 0
+    ) {
+      return res.status(404).json({
+        error:
+          "Provider profile non trovato",
+      });
+    }
+
+    const provider_id =
+      providerQuery.rows[0].id;
+
+    await uploadProfileImageService({
+      provider_id,
+      profile_image:
+        uploadResult.secure_url,
+    });
+
+    res.json({
+      success: true,
+      url: uploadResult.secure_url,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};
 export const approveProvider = async (
   req,
   res

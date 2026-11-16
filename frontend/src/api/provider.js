@@ -31,7 +31,22 @@ export function uploadDocument(file) {
     }
   );
 }
+export function uploadProfileImage(file) {
+  const formData = new FormData();
 
+  formData.append("image", file);
+
+  return API.post(
+    "/profile-image",
+    formData,
+    {
+      headers: {
+        "Content-Type":
+          "multipart/form-data",
+      },
+    }
+  );
+}
 export function createListing(
   title,
   description,
