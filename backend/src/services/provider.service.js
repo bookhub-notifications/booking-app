@@ -1,5 +1,4 @@
 import { pool } from "../config/db.js";
-
 export const createProviderService = async ({
   name,
   email,
@@ -7,6 +6,24 @@ export const createProviderService = async ({
   city,
   user_id,
 }) => {
+
+  const existingProvider =
+    await pool.query(
+      `
+      SELECT *
+      FROM providers
+      WHERE user_id = $1
+      LIMIT 1
+      `,
+      [user_id]
+    );
+
+  if (
+    existingProvider.rows.length > 0
+  ) {
+    return existingProvider.rows[0];
+  }
+
   const result = await pool.query(
     `
     INSERT INTO providers (
