@@ -496,14 +496,21 @@ const filteredServices = services
     />
   )}
 
-  <Link
-    to={`/provider/${service.provider_id}`}
-    className="text-sm text-blue-600 hover:underline"
-  >
-    {service.provider_name}
-  </Link>
-</div>
+  <div className="flex flex-col">
+    <Link
+      to={`/provider/${service.provider_id}`}
+      className="text-sm font-medium text-blue-600 hover:underline"
+    >
+      {service.provider_name}
+    </Link>
 
+    {service.provider_status === "approved" && (
+      <span className="text-xs text-green-600 font-semibold">
+        ✅ Provider verificato
+      </span>
+    )}
+  </div>
+</div>
     <div className="flex flex-wrap gap-2">
 
       {service.provider_status ===
