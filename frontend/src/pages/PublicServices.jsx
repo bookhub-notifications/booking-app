@@ -509,6 +509,11 @@ const filteredServices = services
         ✅ Provider verificato
       </span>
     )}
+  <div className="text-sm text-yellow-600 font-semibold">
+  ⭐ {service.average_rating}
+  {" "}
+  ({service.total_reviews} recensioni)
+</div>
   </div>
 </div>
     <div className="flex flex-wrap gap-2">
