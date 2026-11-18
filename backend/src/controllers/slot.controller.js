@@ -1,5 +1,8 @@
 import { pool } from "../config/db.js";
-import { createSlotService } from "../services/slot.service.js";
+import {
+  createSlotService,
+  getMySlotsService,
+} from "../services/slot.service.js";
 
 export const createSlot = async (req, res) => {
   try {
@@ -35,7 +38,10 @@ export const createSlot = async (req, res) => {
   }
 };
 
-export const getAvailableSlots = async (req, res) => {
+export const getAvailableSlots = async (
+  req,
+  res
+) => {
   try {
     const result = await pool.query(
       `
@@ -54,6 +60,40 @@ export const getAvailableSlots = async (req, res) => {
     );
 
     res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};
+
+export const getMySlots = async (
+  req,
+  res
+) => {
+  try {
+    const providerResult = await pool.query(
+      `
+      SELECT id
+      FROM providers
+      WHERE user_id = $1
+      `,
+      [req.user.id]
+    );
+
+    if (providerResult.rows.length === 0) {
+      return res.status(404).json({
+        error: "Provider not found",
+      });
+    }
+
+    const slots = await getMySlotsService(
+      providerResult.rows[0].id
+    );
+
+    res.json(slots);
   } catch (error) {
     console.error(error);
 

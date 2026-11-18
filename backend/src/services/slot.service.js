@@ -31,3 +31,26 @@ export const createSlotService = async ({
 
   return result.rows[0];
 };
+
+export const getMySlotsService = async (
+  provider_id
+) => {
+  const result = await pool.query(
+    `
+    SELECT
+      id,
+      provider_id,
+      service_id,
+      slot_date,
+      start_time,
+      end_time,
+      status
+    FROM availability_slots
+    WHERE provider_id = $1
+    ORDER BY slot_date, start_time
+    `,
+    [provider_id]
+  );
+
+  return result.rows;
+};

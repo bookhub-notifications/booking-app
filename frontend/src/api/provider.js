@@ -153,3 +153,7 @@ export function createProviderProfile(
     city,
   });
 }
+
+export function getMySlots() {
+  return API.get("/my-slots");
+}

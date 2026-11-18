@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import {
   createSlot,
   getMyServices,
@@ -16,14 +17,10 @@ export default function CreateSlot() {
   useEffect(() => {
     async function loadServices() {
       try {
-        const response = await getMyServices();
+        const response =
+          await getMyServices();
 
-console.log(
-  "SERVICES RESPONSE:",
-  response.data
-);
-
-setServices(response.data);
+        setServices(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -38,14 +35,26 @@ setServices(response.data);
       return;
     }
 
-    await createSlot(
-      serviceId,
-      date,
-      startTime,
-      endTime
-    );
+    try {
+      await createSlot(
+        serviceId,
+        date,
+        startTime,
+        endTime
+      );
 
-    alert("Slot creato!");
+      alert("Slot creato!");
+
+      setDate("");
+      setStartTime("");
+      setEndTime("");
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        "Errore durante la creazione dello slot"
+      );
+    }
   }
 
   return (
@@ -58,29 +67,33 @@ setServices(response.data);
         className="border p-2 w-full mb-3"
         value={serviceId}
         onChange={(e) =>
-          setServiceId(e.target.value)
+          setServiceId(
+            e.target.value
+          )
         }
       >
         <option value="">
           Seleziona un servizio
         </option>
 
-      {services.map((service) => (
-  <option
-    key={service.id}
-    value={service.id}
-  >
-    #{service.id} - {service.title} - €{service.price}
-    {service.description
-      ? ` - ${service.description}`
-      : ""}
-  </option>
-))}
+        {services.map((service) => (
+          <option
+            key={service.id}
+            value={service.id}
+          >
+            #{service.id} - {service.title}
+            {" - "}€{service.price}
+            {service.description
+              ? ` - ${service.description}`
+              : ""}
+          </option>
+        ))}
       </select>
 
       <input
         className="border p-2 w-full mb-3"
         type="date"
+        value={date}
         onChange={(e) =>
           setDate(e.target.value)
         }
@@ -89,16 +102,22 @@ setServices(response.data);
       <input
         className="border p-2 w-full mb-3"
         type="time"
+        value={startTime}
         onChange={(e) =>
-          setStartTime(e.target.value)
+          setStartTime(
+            e.target.value
+          )
         }
       />
 
       <input
         className="border p-2 w-full mb-3"
         type="time"
+        value={endTime}
         onChange={(e) =>
-          setEndTime(e.target.value)
+          setEndTime(
+            e.target.value
+          )
         }
       />
 

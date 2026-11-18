@@ -3,12 +3,19 @@ import express from "express";
 import {
   createSlot,
   getAvailableSlots,
+  getMySlots,
 } from "../controllers/slot.controller.js";
 
 const router = express.Router();
 
 // Create slot
 router.post("/create", createSlot);
+
+// Get provider slots
+router.get(
+  "/my-slots",
+  getMySlots
+);
 
 // Get available slots for a service
 router.get(
