@@ -349,6 +349,48 @@ return (
       ))
   )}
 </div>
+      <div className="bg-white p-6 rounded shadow mb-8">
+  <h3 className="text-xl font-bold mb-4">
+    📅 Calendario Prenotazioni
+  </h3>
+
+  {bookings.length === 0 ? (
+    <p>Nessuna prenotazione disponibile.</p>
+  ) : (
+    bookings.map((booking) => (
+      <div
+        key={booking.id}
+        className="border-b py-3 last:border-b-0"
+      >
+        <p className="font-semibold">
+          {booking.service_title}
+        </p>
+
+        <p>
+          📅 {booking.slot_date}
+        </p>
+
+        <p>
+          🕒 {booking.start_time} - {booking.end_time}
+        </p>
+
+        <p>
+          👤 {booking.customer_email}
+        </p>
+
+        <p
+          className={`font-semibold ${
+            booking.status === "cancelled"
+              ? "text-red-600"
+              : "text-green-600"
+          }`}
+        >
+          {booking.status}
+        </p>
+      </div>
+    ))
+  )}
+</div>
       <div className="mt-8 p-6 bg-white rounded shadow">
         <h3 className="text-xl font-bold mb-4">
           ⭐ Recensioni ricevute
