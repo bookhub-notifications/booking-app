@@ -157,3 +157,8 @@ export function createProviderProfile(
 export function getMySlots() {
   return API.get("/my-slots");
 }
+export function deleteSlot(id) {
+  return API.delete(
+    `/slot/${id}`
+  );
+}

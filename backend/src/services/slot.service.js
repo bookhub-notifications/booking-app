@@ -36,21 +36,40 @@ export const getMySlotsService = async (
   provider_id
 ) => {
   const result = await pool.query(
-    `
-    SELECT
-      id,
-      provider_id,
-      service_id,
-      slot_date,
-      start_time,
-      end_time,
-      status
-    FROM availability_slots
-    WHERE provider_id = $1
-    ORDER BY slot_date, start_time
-    `,
-    [provider_id]
-  );
+  `
+  SELECT
+    s.id,
+    s.provider_id,
+    s.service_id,
+    s.slot_date,
+    s.start_time,
+    s.end_time,
+    s.status,
+    sv.title AS service_title
+  FROM availability_slots s
+  JOIN services sv
+    ON sv.id = s.service_id
+  WHERE s.provider_id = $1
+  ORDER BY s.slot_date, s.start_time
+  `,
+  [provider_id]
+);
 
   return result.rows;
+};
+export const deleteSlotService = async (
+  slot_id,
+  provider_id
+) => {
+  const result = await pool.query(
+    `
+    DELETE FROM availability_slots
+    WHERE id = $1
+    AND provider_id = $2
+    RETURNING *
+    `,
+    [slot_id, provider_id]
+  );
+
+  return result.rows[0];
 };

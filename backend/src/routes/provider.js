@@ -23,6 +23,7 @@ import {
 import {
   createSlot,
   getMySlots,
+  deleteSlot,
 } from "../controllers/slot.controller.js";
 const router = express.Router();
 
@@ -110,10 +111,17 @@ router.post(
   auth,
   createSlot
 );
+
 router.get(
   "/my-slots",
   auth,
   getMySlots
+);
+
+router.delete(
+  "/slot/:id",
+  auth,
+  deleteSlot
 );
 /*
 =====================================
