@@ -37,6 +37,7 @@ const [bookings, setBookings] =
     totalReviews: 0,
     averageRating: 0,
     totalRevenue: 0,
+    totalServices: 0,
     totalCustomers: 0,
     topService: "",
     monthlyRevenue: [],
@@ -68,6 +69,7 @@ const [bookings, setBookings] =
         totalReviews: 0,
         averageRating: 0,
         totalRevenue: 0,
+        totalServices: 0,
         monthlyRevenue: [],
       }
     );
@@ -195,7 +197,15 @@ return (
       {analytics.totalCustomers}
     </p>
   </div>
+<div className="bg-white p-4 rounded shadow">
+  <h3 className="font-bold">
+    🛠️ Servizi
+  </h3>
 
+  <p className="text-xl md:text-2xl mt-2">
+    {analytics.totalServices}
+  </p>
+</div>
   <div className="bg-white p-4 rounded shadow">
     <h3 className="font-bold">
       💰 Entrate

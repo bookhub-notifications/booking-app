@@ -239,7 +239,15 @@ export const getProviderReservationsService =
         `,
         [providerId]
       );
-
+const services =
+  await pool.query(
+    `
+    SELECT COUNT(*) AS total_services
+    FROM services
+    WHERE provider_id = $1
+    `,
+    [providerId]
+  );
     const customers =
       await pool.query(
         `
@@ -334,7 +342,11 @@ export const getProviderReservationsService =
           revenue.rows[0]
             .total_revenue
         ),
-
+totalServices:
+    Number(
+      services.rows[0]
+        .total_services
+    ),
       totalCustomers:
         Number(
           customers.rows[0]
