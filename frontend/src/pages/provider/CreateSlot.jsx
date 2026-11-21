@@ -50,12 +50,9 @@ const events =
     (slot) => ({
       id: slot.id,
 
+      
       title:
-  `${slot.service_title}
-${slot.start_time.slice(0, 5)} - ${slot.end_time.slice(0, 5)}`,
-      start: new Date(
-        `${slot.slot_date.split("T")[0]}T${slot.start_time}`
-      ),
+  `${slot.service_title} ${slot.start_time.slice(0, 5)}`,
 
       end: new Date(
         `${slot.slot_date.split("T")[0]}T${slot.end_time}`
