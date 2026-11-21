@@ -48,30 +48,29 @@ const [showModal, setShowModal] =
       );
 
       const slotsResponse =
-        await getMySlots();
+  await getMySlots();
+
 console.log(slotsResponse.data);
-      const events =
-        slotsResponse.data.map(
-          (slot) => ({
-            id: slot.id,
 
-            title:
-              `${slot.service_title} ${slot.start_time.slice(
-                0,
-                5
-              )}`,
+const events =
+  slotsResponse.data.map(
+    (slot) => ({
+      id: slot.id,
 
-            start: new Date(
-              `${slot.slot_date.split("T")[0]}T${slot.start_time}`
-            ),
+      // Solo icona nel calendario
+      title: "📅",
 
-            end: new Date(
-              `${slot.slot_date.split("T")[0]}T${slot.end_time}`
-            ),
+      start: new Date(
+        `${slot.slot_date.split("T")[0]}T${slot.start_time}`
+      ),
 
-            resource: slot,
-          })
-        );
+      end: new Date(
+        `${slot.slot_date.split("T")[0]}T${slot.end_time}`
+      ),
+
+      resource: slot,
+    })
+  );
 
       setSlots(events);
 
@@ -284,55 +283,51 @@ function eventStyleGetter(event) {
   </span>
 </div>
 </div>
-
 {showModal && selectedEvent && (
-  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+  <div
+    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+    onClick={() => setShowModal(false)}
+  >
+    <div
+      className="bg-white p-6 rounded-lg shadow-lg w-96"
+      onClick={(e) => e.stopPropagation()}
+    >
       <h3 className="text-xl font-bold text-center mb-4">
-  📅 {selectedEvent.resource.service_title}
-</h3>
+        📅 {selectedEvent.resource.service_title}
+      </h3>
 
       <p className="mb-2">
-  <strong>Orario:</strong>{" "}
-  {selectedEvent.resource.start_time.slice(
-    0,
-    5
-  )}
-  {" - "}
-  {selectedEvent.resource.end_time.slice(
-    0,
-    5
-  )}
-</p>
+        <strong>Orario:</strong>{" "}
+        {selectedEvent.resource.start_time.slice(0, 5)}
+        {" - "}
+        {selectedEvent.resource.end_time.slice(0, 5)}
+      </p>
 
       <p className="mb-4">
-  <strong>Stato:</strong>{" "}
-  {selectedEvent.resource.status === "booked"
-    ? "🔴 Prenotato"
-    : "🟢 Disponibile"}
-</p>
-      {selectedEvent.resource.status ===
-      "booked" ? (
+        <strong>Stato:</strong>{" "}
+        {selectedEvent.resource.status === "booked"
+          ? "🔴 Prenotato"
+          : "🟢 Disponibile"}
+      </p>
+
+      {selectedEvent.resource.status === "booked" ? (
         <button
           onClick={handleFreeSlot}
-          className="bg-blue-600 text-white px-4 py-2 rounded mr-2"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mr-2 transition"
         >
           🔓 Libera Slot
         </button>
       ) : (
         <button
           onClick={handleDeleteSlot}
-          className="bg-red-600 text-white px-4 py-2 rounded mr-2"
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded mr-2 transition"
         >
           Elimina Slot
         </button>
       )}
-
       <button
-        onClick={() =>
-          setShowModal(false)
-        }
-        className="bg-gray-300 px-4 py-2 rounded"
+        onClick={() => setShowModal(false)}
+        className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded transition"
       >
         Chiudi
       </button>
@@ -340,7 +335,7 @@ function eventStyleGetter(event) {
   </div>
 )}
 
-</Layout>
+  </Layout>
 );
 }
-        
+      
