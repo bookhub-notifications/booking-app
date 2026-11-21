@@ -12,7 +12,6 @@ import {
   getMySlots,
 } from "../../api/provider";
 
-
 import Layout from "../../components/Layout";
 
 const localizer =
@@ -43,25 +42,32 @@ export default function CreateSlot() {
         servicesResponse.data || []
       );
 
+      const slotsResponse =
+        await getMySlots();
+
       const events =
-  slotsResponse.data.map(
-    (slot) => ({
-      id: slot.id,
+        slotsResponse.data.map(
+          (slot) => ({
+            id: slot.id,
 
-      title:
-        `${slot.service_title} ${slot.start_time.slice(0, 5)}`,
+            title:
+              `${slot.service_title} ${slot.start_time.slice(
+                0,
+                5
+              )}`,
 
-      start: new Date(
-        `${slot.slot_date.split("T")[0]}T${slot.start_time}`
-      ),
+            start: new Date(
+              `${slot.slot_date.split("T")[0]}T${slot.start_time}`
+            ),
 
-      end: new Date(
-        `${slot.slot_date.split("T")[0]}T${slot.end_time}`
-      ),
+            end: new Date(
+              `${slot.slot_date.split("T")[0]}T${slot.end_time}`
+            ),
 
-      resource: slot,
-    })
-  );
+            resource: slot,
+          })
+        );
+
       setSlots(events);
 
       if (events.length > 0) {
@@ -89,17 +95,20 @@ export default function CreateSlot() {
     }
 
     try {
-      const slotDate = moment(
-        slotInfo.start
-      ).format("YYYY-MM-DD");
+      const slotDate =
+        moment(
+          slotInfo.start
+        ).format("YYYY-MM-DD");
 
-      const startTime = moment(
-        slotInfo.start
-      ).format("HH:mm");
+      const startTime =
+        moment(
+          slotInfo.start
+        ).format("HH:mm");
 
-      const endTime = moment(
-        slotInfo.end
-      ).format("HH:mm");
+      const endTime =
+        moment(
+          slotInfo.end
+        ).format("HH:mm");
 
       await createSlot(
         serviceId,
@@ -114,51 +123,52 @@ export default function CreateSlot() {
     } catch (error) {
       console.error(error);
 
-      
       alert(
-  error?.response?.data?.error ||
-    "Errore durante la creazione dello slot"
-);
+        error?.response?.data
+          ?.error ||
+          "Errore durante la creazione dello slot"
+      );
     }
   }
-async function handleSelectEvent(
-  event
-) {
-  if (
-    event.resource.status ===
-    "booked"
+
+  async function handleSelectEvent(
+    event
   ) {
-    alert(
-      "Questo slot è associato ad una prenotazione e non può essere eliminato."
-    );
+    if (
+      event.resource.status ===
+      "booked"
+    ) {
+      alert(
+        "Questo slot è associato ad una prenotazione e non può essere eliminato."
+      );
 
-    return;
+      return;
+    }
+
+    const confirmDelete =
+      window.confirm(
+        "Vuoi eliminare questo slot?"
+      );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      await deleteSlot(event.id);
+
+      alert("Slot eliminato");
+
+      await loadData();
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        "Errore durante l'eliminazione"
+      );
+    }
   }
 
-  const confirmDelete =
-    window.confirm(
-      "Vuoi eliminare questo slot?"
-    );
-
-  if (!confirmDelete) {
-    return;
-  }
-
-  try {
-    await deleteSlot(event.id);
-
-    alert("Slot eliminato");
-
-    await loadData();
-  } catch (error) {
-    console.error(error);
-
-    alert(
-      "Errore durante l'eliminazione"
-    );
-  }
-}
-  
   function eventStyleGetter(
     event
   ) {
@@ -243,7 +253,9 @@ async function handleSelectEvent(
               setView(newView)
             }
             date={currentDate}
-            onNavigate={(newDate) =>
+            onNavigate={(
+              newDate
+            ) =>
               setCurrentDate(
                 newDate
               )
@@ -252,8 +264,8 @@ async function handleSelectEvent(
               handleSelectSlot
             }
             onSelectEvent={
-  handleSelectEvent
-}
+              handleSelectEvent
+            }
             eventPropGetter={
               eventStyleGetter
             }
