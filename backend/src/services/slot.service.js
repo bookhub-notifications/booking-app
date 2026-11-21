@@ -35,6 +35,7 @@ export const createSlotService = async ({
 export const getMySlotsService = async (
   provider_id
 ) => {
+  
   const result = await pool.query(
   `
   SELECT
@@ -44,11 +45,17 @@ export const getMySlotsService = async (
     s.slot_date,
     s.start_time,
     s.end_time,
-    s.status,
+    CASE
+      WHEN r.id IS NOT NULL
+      THEN 'booked'
+      ELSE 'available'
+    END AS status,
     sv.title AS service_title
   FROM availability_slots s
   JOIN services sv
     ON sv.id = s.service_id
+  LEFT JOIN reservations r
+    ON r.slot_id = s.id
   WHERE s.provider_id = $1
   ORDER BY s.slot_date, s.start_time
   `,
