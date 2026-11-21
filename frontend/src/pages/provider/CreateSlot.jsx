@@ -58,8 +58,7 @@ const events =
       id: slot.id,
 
       // Solo icona nel calendario
-      title: "",
-
+title: slot.service_title.slice(0, 8),
       start: new Date(
         `${slot.slot_date.split("T")[0]}T${slot.start_time}`
       ),
