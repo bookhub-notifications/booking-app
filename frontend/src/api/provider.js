@@ -162,3 +162,18 @@ export function deleteSlot(id) {
     `/slot/${id}`
   );
 }
+export function freeSlot(
+  reservationId
+) {
+  return axios.post(
+    `${API_BASE_URL}/reservations/cancel/${reservationId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          "token"
+        )}`,
+      },
+    }
+  );
+}

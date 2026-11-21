@@ -10,6 +10,7 @@ import {
   deleteSlot,
   getMyServices,
   getMySlots,
+  freeSlot,
 } from "../../api/provider";
 
 import Layout from "../../components/Layout";
@@ -132,42 +133,66 @@ export default function CreateSlot() {
   }
 
   async function handleSelectEvent(
-    event
+  event
+) {
+  if (
+    event.resource.status ===
+    "booked"
   ) {
-    if (
-      event.resource.status ===
-      "booked"
-    ) {
-      alert(
-        "Questo slot è associato ad una prenotazione e non può essere eliminato."
-      );
-
-      return;
-    }
-
-    const confirmDelete =
+    const confirmFree =
       window.confirm(
-        "Vuoi eliminare questo slot?"
+        "Questo slot è prenotato.\n\nVuoi liberarlo?"
       );
 
-    if (!confirmDelete) {
+    if (!confirmFree) {
       return;
     }
 
     try {
-      await deleteSlot(event.id);
+      await freeSlot(
+        event.resource
+          .reservation_id
+      );
 
-      alert("Slot eliminato");
+      alert(
+        "Slot liberato con successo"
+      );
 
       await loadData();
     } catch (error) {
       console.error(error);
 
       alert(
-        "Errore durante l'eliminazione"
+        "Errore durante la liberazione dello slot"
       );
     }
+
+    return;
   }
+
+  const confirmDelete =
+    window.confirm(
+      "Vuoi eliminare questo slot?"
+    );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  try {
+    await deleteSlot(event.id);
+
+    alert("Slot eliminato");
+
+    await loadData();
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "Errore durante l'eliminazione"
+    );
+  }
+}
 
   function eventStyleGetter(
     event
