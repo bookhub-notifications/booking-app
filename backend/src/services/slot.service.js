@@ -7,6 +7,35 @@ export const createSlotService = async ({
   start_time,
   end_time,
 }) => {
+  const overlapping =
+    await pool.query(
+      `
+      SELECT id
+      FROM availability_slots
+      WHERE provider_id = $1
+      AND slot_date = $2
+      AND (
+        start_time < $4
+        AND end_time > $3
+      )
+      LIMIT 1
+      `,
+      [
+        provider_id,
+        date,
+        start_time,
+        end_time,
+      ]
+    );
+
+  if (
+    overlapping.rows.length > 0
+  ) {
+    throw new Error(
+      "OVERLAPPING_SLOT"
+    );
+  }
+
   const result = await pool.query(
     `
     INSERT INTO availability_slots (
@@ -17,7 +46,14 @@ export const createSlotService = async ({
       end_time,
       status
     )
-    VALUES ($1, $2, $3, $4, $5, 'available')
+    VALUES (
+      $1,
+      $2,
+      $3,
+      $4,
+      $5,
+      'available'
+    )
     RETURNING *
     `,
     [
@@ -31,6 +67,7 @@ export const createSlotService = async ({
 
   return result.rows[0];
 };
+
 
 export const getMySlotsService = async (
   provider_id

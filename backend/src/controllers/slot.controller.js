@@ -42,6 +42,16 @@ export const createSlot = async (
   } catch (error) {
     console.error(error);
 
+    if (
+      error.message ===
+      "OVERLAPPING_SLOT"
+    ) {
+      return res.status(400).json({
+        error:
+          "Esiste già uno slot in questa fascia oraria",
+      });
+    }
+
     res.status(500).json({
       error:
         "Internal server error",

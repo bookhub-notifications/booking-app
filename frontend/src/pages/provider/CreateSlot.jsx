@@ -116,9 +116,11 @@ ${slot.start_time.slice(0, 5)} - ${slot.end_time.slice(0, 5)}`,
     } catch (error) {
       console.error(error);
 
+      
       alert(
-        "Errore durante la creazione dello slot"
-      );
+  error?.response?.data?.error ||
+    "Errore durante la creazione dello slot"
+);
     }
   }
 async function handleSelectEvent(
