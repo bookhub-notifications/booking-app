@@ -43,16 +43,17 @@ export default function CreateSlot() {
         servicesResponse.data || []
       );
 
-      const slotsResponse =
-        await getMySlots();
-const events =
+      const events =
   slotsResponse.data.map(
     (slot) => ({
       id: slot.id,
 
-      
       title:
-  `${slot.service_title} ${slot.start_time.slice(0, 5)}`,
+        `${slot.service_title} ${slot.start_time.slice(0, 5)}`,
+
+      start: new Date(
+        `${slot.slot_date.split("T")[0]}T${slot.start_time}`
+      ),
 
       end: new Date(
         `${slot.slot_date.split("T")[0]}T${slot.end_time}`
