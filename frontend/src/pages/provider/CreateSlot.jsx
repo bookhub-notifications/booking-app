@@ -183,9 +183,14 @@ function eventStyleGetter(event) {
           ? "#ef4444"
           : "#22c55e",
 
-      borderRadius: "6px",
+      borderRadius: "10px",
       border: "none",
-      color: "#fff",
+      cursor: "pointer",
+
+      minHeight: "36px",
+
+      boxShadow:
+        "0 2px 6px rgba(0,0,0,0.15)",
     },
   };
 }
