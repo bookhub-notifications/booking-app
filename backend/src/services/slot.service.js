@@ -84,10 +84,10 @@ export const getMySlotsService = async (
       r.id AS reservation_id,
 
       CASE
-        WHEN r.id IS NOT NULL
-        THEN 'booked'
-        ELSE 'available'
-      END AS status,
+  WHEN r.id IS NOT NULL
+  THEN 'booked'
+  ELSE 'available'
+END AS status
 
       sv.title AS service_title
 
@@ -97,9 +97,7 @@ export const getMySlotsService = async (
       ON sv.id = s.service_id
 
     LEFT JOIN reservations r
-      ON r.slot_id = s.id
-      AND r.status = 'confirmed'
-
+  ON r.slot_id = s.id
     WHERE s.provider_id = $1
 
     ORDER BY
