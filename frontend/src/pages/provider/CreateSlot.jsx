@@ -33,7 +33,11 @@ export default function CreateSlot() {
 
   const [currentDate, setCurrentDate] =
     useState(new Date());
+const [selectedEvent, setSelectedEvent] =
+  useState(null);
 
+const [showModal, setShowModal] =
+  useState(false);
   async function loadData() {
     try {
       const servicesResponse =
@@ -131,90 +135,61 @@ console.log(slotsResponse.data);
       );
     }
   }
+function handleSelectEvent(event) {
+  setSelectedEvent(event);
+  setShowModal(true);
+}
 
-  async function handleSelectEvent(
-  event
-) {
-  console.log(event.resource);
-  if (
-    event.resource.status ===
-    "booked"
-  ) {
-    const confirmFree =
-      window.confirm(
-        "Questo slot è prenotato.\n\nVuoi liberarlo?"
-      );
-
-    if (!confirmFree) {
-      return;
-    }
-
-    try {
-      await freeSlot(
-        event.resource
-          .reservation_id
-      );
-
-      alert(
-        "Slot liberato con successo"
-      );
-
-      await loadData();
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        "Errore durante la liberazione dello slot"
-      );
-    }
-
-    return;
-  }
-
-  const confirmDelete =
-    window.confirm(
-      "Vuoi eliminare questo slot?"
-    );
-
-  if (!confirmDelete) {
-    return;
-  }
-
+async function handleDeleteSlot() {
   try {
-    await deleteSlot(event.id);
+    await deleteSlot(selectedEvent.id);
 
-    alert("Slot eliminato");
+    setShowModal(false);
 
     await loadData();
   } catch (error) {
     console.error(error);
 
-    
     alert(
-  error?.response?.data?.error ||
-  "Errore durante l'eliminazione"
-);
+      error?.response?.data?.error ||
+      "Errore durante l'eliminazione"
+    );
   }
 }
 
-  function eventStyleGetter(
-    event
-  ) {
-    return {
-      style: {
-        backgroundColor:
-          event.resource.status ===
-          "booked"
-            ? "#ef4444"
-            : "#22c55e",
+async function handleFreeSlot() {
+  try {
+    await freeSlot(
+      selectedEvent.resource.reservation_id
+    );
 
-        borderRadius: "6px",
-        border: "none",
-        color: "#fff",
-      },
-    };
+    setShowModal(false);
+
+    await loadData();
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      error?.response?.data?.error ||
+      "Errore durante la liberazione"
+    );
   }
+}
 
+function eventStyleGetter(event) {
+  return {
+    style: {
+      backgroundColor:
+        event.resource.status === "booked"
+          ? "#ef4444"
+          : "#22c55e",
+
+      borderRadius: "6px",
+      border: "none",
+      color: "#fff",
+    },
+  };
+}
   return (
     <Layout>
       <div className="bg-white rounded shadow p-6">
@@ -299,17 +274,73 @@ console.log(slotsResponse.data);
             }
           />
         </div>
+<div className="mt-4 flex gap-4 text-sm">
+  <span>
+    🟢 Disponibile
+  </span>
 
-        <div className="mt-4 flex gap-4 text-sm">
-          <span>
-            🟢 Disponibile
-          </span>
+  <span>
+    🔴 Prenotato
+  </span>
+</div>
+</div>
 
-          <span>
-            🔴 Prenotato
-          </span>
-        </div>
-      </div>
-    </Layout>
-  );
+{showModal && selectedEvent && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h3 className="text-xl font-bold text-center mb-4">
+  📅 {selectedEvent.resource.service_title}
+</h3>
+
+      <p className="mb-2">
+  <strong>Orario:</strong>{" "}
+  {selectedEvent.resource.start_time.slice(
+    0,
+    5
+  )}
+  {" - "}
+  {selectedEvent.resource.end_time.slice(
+    0,
+    5
+  )}
+</p>
+
+      <p className="mb-4">
+  <strong>Stato:</strong>{" "}
+  {selectedEvent.resource.status === "booked"
+    ? "🔴 Prenotato"
+    : "🟢 Disponibile"}
+</p>
+      {selectedEvent.resource.status ===
+      "booked" ? (
+        <button
+          onClick={handleFreeSlot}
+          className="bg-blue-600 text-white px-4 py-2 rounded mr-2"
+        >
+          🔓 Libera Slot
+        </button>
+      ) : (
+        <button
+          onClick={handleDeleteSlot}
+          className="bg-red-600 text-white px-4 py-2 rounded mr-2"
+        >
+          Elimina Slot
+        </button>
+      )}
+
+      <button
+        onClick={() =>
+          setShowModal(false)
+        }
+        className="bg-gray-300 px-4 py-2 rounded"
+      >
+        Chiudi
+      </button>
+    </div>
+  </div>
+)}
+
+</Layout>
+);
 }
+        
