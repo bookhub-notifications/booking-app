@@ -45,7 +45,7 @@ export default function CreateSlot() {
 
       const slotsResponse =
         await getMySlots();
-
+console.log(slotsResponse.data);
       const events =
         slotsResponse.data.map(
           (slot) => ({
@@ -135,6 +135,7 @@ export default function CreateSlot() {
   async function handleSelectEvent(
   event
 ) {
+  console.log(event.resource);
   if (
     event.resource.status ===
     "booked"
