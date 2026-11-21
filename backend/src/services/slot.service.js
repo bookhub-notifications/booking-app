@@ -68,39 +68,50 @@ export const createSlotService = async ({
   return result.rows[0];
 };
 
-
 export const getMySlotsService = async (
   provider_id
 ) => {
-  
   const result = await pool.query(
-  `
-  SELECT
-    s.id,
-    s.provider_id,
-    s.service_id,
-    s.slot_date,
-    s.start_time,
-    s.end_time,
-    CASE
-      WHEN r.id IS NOT NULL
-      THEN 'booked'
-      ELSE 'available'
-    END AS status,
-    sv.title AS service_title
-  FROM availability_slots s
-  JOIN services sv
-    ON sv.id = s.service_id
-  LEFT JOIN reservations r
-    ON r.slot_id = s.id
-  WHERE s.provider_id = $1
-  ORDER BY s.slot_date, s.start_time
-  `,
-  [provider_id]
-);
+    `
+    SELECT
+      s.id,
+      s.provider_id,
+      s.service_id,
+      s.slot_date,
+      s.start_time,
+      s.end_time,
+
+      r.id AS reservation_id,
+
+      CASE
+        WHEN r.id IS NOT NULL
+        THEN 'booked'
+        ELSE 'available'
+      END AS status,
+
+      sv.title AS service_title
+
+    FROM availability_slots s
+
+    JOIN services sv
+      ON sv.id = s.service_id
+
+    LEFT JOIN reservations r
+      ON r.slot_id = s.id
+      AND r.status = 'confirmed'
+
+    WHERE s.provider_id = $1
+
+    ORDER BY
+      s.slot_date,
+      s.start_time
+    `,
+    [provider_id]
+  );
 
   return result.rows;
 };
+
 export const deleteSlotService = async (
   slot_id,
   provider_id
