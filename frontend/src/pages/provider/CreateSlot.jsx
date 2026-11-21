@@ -189,9 +189,11 @@ console.log(slotsResponse.data);
   } catch (error) {
     console.error(error);
 
+    
     alert(
-      "Errore durante l'eliminazione"
-    );
+  error?.response?.data?.error ||
+  "Errore durante l'eliminazione"
+);
   }
 }
 

@@ -128,7 +128,6 @@ export const getMySlots = async (
     });
   }
 };
-
 export const deleteSlot =
   async (req, res) => {
     try {
@@ -171,9 +170,20 @@ export const deleteSlot =
     } catch (error) {
       console.error(error);
 
+      if (
+        error.message ===
+        "SLOT_HAS_HISTORY"
+      ) {
+        return res.status(400).json({
+          error:
+            "Questo slot contiene storico prenotazioni e non può essere eliminato.",
+        });
+      }
+
       res.status(500).json({
         error:
           "Internal server error",
       });
     }
   };
+

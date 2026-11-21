@@ -108,11 +108,29 @@ ORDER BY
 
   return result.rows;
 };
-
 export const deleteSlotService = async (
   slot_id,
   provider_id
 ) => {
+  const reservations =
+    await pool.query(
+      `
+      SELECT id
+      FROM reservations
+      WHERE slot_id = $1
+      LIMIT 1
+      `,
+      [slot_id]
+    );
+
+  if (
+    reservations.rows.length > 0
+  ) {
+    throw new Error(
+      "SLOT_HAS_HISTORY"
+    );
+  }
+
   const result = await pool.query(
     `
     DELETE FROM availability_slots
@@ -125,3 +143,4 @@ export const deleteSlotService = async (
 
   return result.rows[0];
 };
+
