@@ -97,6 +97,7 @@ JOIN services sv
   ON sv.id = s.service_id
 LEFT JOIN reservations r
   ON r.slot_id = s.id
+  AND r.status = 'confirmed'
 WHERE s.provider_id = $1
 ORDER BY
   s.slot_date,
