@@ -38,6 +38,7 @@ const [bookings, setBookings] =
     averageRating: 0,
     totalRevenue: 0,
     totalServices: 0,
+    totalSlots: 0,
     totalCustomers: 0,
     topService: "",
     monthlyRevenue: [],
@@ -70,6 +71,7 @@ const [bookings, setBookings] =
         averageRating: 0,
         totalRevenue: 0,
         totalServices: 0,
+        totalSlots: 0,
         monthlyRevenue: [],
       }
     );
@@ -204,6 +206,15 @@ return (
 
   <p className="text-xl md:text-2xl mt-2">
     {analytics.totalServices}
+  </p>
+</div>
+  <div className="bg-white p-4 rounded shadow">
+  <h3 className="font-bold">
+    📅 Slot Attivi
+  </h3>
+
+  <p className="text-xl md:text-2xl mt-2">
+    {analytics.totalSlots}
   </p>
 </div>
   <div className="bg-white p-4 rounded shadow">

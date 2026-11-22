@@ -248,7 +248,16 @@ const services =
     `,
     [providerId]
   );
-    const customers =
+  const activeSlots =
+  await pool.query(
+    `
+    SELECT COUNT(*) AS total_slots
+    FROM availability_slots
+    WHERE provider_id = $1
+    `,
+    [providerId]
+  );  
+  const customers =
       await pool.query(
         `
         SELECT
@@ -347,7 +356,12 @@ totalServices:
       services.rows[0]
         .total_services
     ),
-      totalCustomers:
+    totalSlots:
+  Number(
+    activeSlots.rows[0]
+      .total_slots
+  ),  
+    totalCustomers:
         Number(
           customers.rows[0]
             .total_customers
