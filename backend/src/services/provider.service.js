@@ -361,7 +361,24 @@ totalServices:
     activeSlots.rows[0]
       .total_slots
   ),  
-    totalCustomers:
+   occupancyRate:
+  Number(
+    activeSlots.rows[0]
+      .total_slots
+  ) > 0
+    ? Math.round(
+        (Number(
+          bookings.rows[0]
+            .total_bookings
+        ) /
+          Number(
+            activeSlots.rows[0]
+              .total_slots
+          )) *
+          100
+      )
+    : 0, 
+  totalCustomers:
         Number(
           customers.rows[0]
             .total_customers

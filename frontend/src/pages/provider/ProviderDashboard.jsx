@@ -39,6 +39,7 @@ const [bookings, setBookings] =
     totalRevenue: 0,
     totalServices: 0,
     totalSlots: 0,
+    occupancyRate: 0,
     totalCustomers: 0,
     topService: "",
     monthlyRevenue: [],
@@ -72,6 +73,7 @@ const [bookings, setBookings] =
         totalRevenue: 0,
         totalServices: 0,
         totalSlots: 0,
+        occupancyRate: 0,
         monthlyRevenue: [],
       }
     );
@@ -215,6 +217,15 @@ return (
 
   <p className="text-xl md:text-2xl mt-2">
     {analytics.totalSlots}
+  </p>
+</div>
+  <div className="bg-white p-4 rounded shadow">
+  <h3 className="font-bold">
+    📊 Occupazione
+  </h3>
+
+  <p className="text-xl md:text-2xl mt-2">
+    {analytics.occupancyRate}%
   </p>
 </div>
   <div className="bg-white p-4 rounded shadow">
